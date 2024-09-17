@@ -1,1 +1,2 @@
-print('Ура! Ура!')
+
+print('Salut!')
