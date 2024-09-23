@@ -1,14 +1,14 @@
 import pygame
+import random
 
 # Инициализация Pygame
 pygame.init()
 
 # Константы
-SCREEN_WIDTH = 200
+SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 400
 BLOCK_SIZE = 20
 FPS = 10
-FALL_SPEED = 5  # Скорость падения
 
 # Цвета
 BLACK = (0, 0, 0)
@@ -25,7 +25,6 @@ class Stick:
     def __init__(self):
         self.blocks = [Block(5, 0), Block(5, 1), Block(5, 2), Block(5, 3)]
         self.color = RED
-        self.orientation = 0  # 0: вертикально, 1: горизонтально
 
     def draw(self, surface):
         for block in self.blocks:
@@ -47,16 +46,6 @@ class Stick:
         for block in self.blocks:
             block.x += 1
 
-    def rotate(self):
-        if self.orientation == 0:  # Из вертикального в горизонтальное
-            x, y = self.blocks[0].x, self.blocks[0].y
-            self.blocks = [Block(x + i, y) for i in range(4)]
-            self.orientation = 1
-        else:  # Из горизонтального в вертикальное
-            x, y = self.blocks[0].x, self.blocks[0].y
-            self.blocks = [Block(x, y + i) for i in range(4)]
-            self.orientation = 0
-
 # Функции
 def draw_grid(surface):
     for x in range(0, SCREEN_WIDTH, BLOCK_SIZE):
@@ -70,12 +59,10 @@ def main():
     clock = pygame.time.Clock()
 
     stick = Stick()
-    fall_time = 0
 
     running = True
     while running:
         screen.fill(BLACK)
-        fall_time += 1
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -87,13 +74,8 @@ def main():
                     stick.move_right()
                 elif event.key == pygame.K_DOWN:
                     stick.move_down()
-                elif event.key == pygame.K_UP:
-                    stick.rotate()
 
-        if fall_time >= FALL_SPEED:
-            stick.move_down()
-            fall_time = 0
-
+        stick.move_down()
         stick.draw(screen)
         draw_grid(screen)
 
